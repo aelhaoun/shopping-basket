@@ -1,34 +1,40 @@
 var TicketGenerator = require('../src/index.js');
-const data = require('./items1');
-const config = require('./config');
 var assert = require('assert');
+
+const data1 = require('./config1/items');
+const config1 = require('./config1/config');
+
+const data2 = require('./config2/items');
+const config2 = require('./config2/config');
+
+
 
 /**
  * Configuration tests.
  */
 describe("Configuration", function() {
   it("Test currency configuration", function() {
-    assert.equal(config.currency, 'p');
+    assert.equal(config1.currency, 'p');
   });
 
   it("Test product availability", function() {
-    assert.notDeepEqual(config.availableItems.Apple, undefined);
-    assert.notDeepEqual(config.availableItems.Orange, undefined);
-    assert.notDeepEqual(config.availableItems.Orange, undefined);
-    assert.equal(config.availableItems.NonAvailable, undefined);
+    assert.notDeepEqual(config1.availableItems.Apple, undefined);
+    assert.notDeepEqual(config1.availableItems.Orange, undefined);
+    assert.notDeepEqual(config1.availableItems.Orange, undefined);
+    assert.equal(config1.availableItems.NonAvailable, undefined);
   });
 
   it("Test product solded", function() {
-    assert.notDeepEqual(config.availableItems.Papaya.solded, undefined);
-    assert.equal(config.availableItems.Orange.solded, undefined);
+    assert.notDeepEqual(config1.availableItems.Papaya.solded, undefined);
+    assert.equal(config1.availableItems.Orange.solded, undefined);
   });
 });
 
 /**
  * Test the ticket generation.
  */
-describe("Ticket generator", function() {
-  var ticketGenerator = new TicketGenerator(data.items, config);
+describe("Ticket generator 1", function() {
+  var ticketGenerator = new TicketGenerator(data1.items, config1);
   ticketGenerator.countItems();
 
   it("Test count elements", function() {
@@ -48,7 +54,26 @@ describe("Ticket generator", function() {
   });
 });
 
+describe("Ticket generator 2", function() {
+  var ticketGenerator = new TicketGenerator(data2.items, config2);
+  ticketGenerator.generateTicket();
+  assert.equal(ticketGenerator.ticket.Apple, '20');
+  assert.equal(ticketGenerator.ticket.Orange, '40');
+});
 
+/**
+ * Test errors.
+ */
+describe("Test errors", function() {
+  const dataError = require('./configError/itemsThrowError');
+  var ticketGenerator = new TicketGenerator(dataError.items, config1);
 
-// assert.throws(myFunction, 'missing foo', 'did not throw with expected message');
-
+  it("Test elements not in the store", function() {
+    assert.throws(function() {
+      ticketGenerator.generateTicket()
+    },
+    Error,
+    'Element : ItemNotInTheStore, non existent in the store.'
+    );
+  });
+});

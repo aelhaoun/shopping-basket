@@ -10,7 +10,7 @@ module.exports = class TicketGenerator {
     * Contstructor of our ticket generator.
 
     * @param {Array} Products, that the basket contains
-    * @param {Object} The configuration of our store, the price of each 
+    * @param {Object} The configuration of our store, the price of each
     * product + the sold parameters if the the product is solded.
     */
    constructor(items, config) {
@@ -27,18 +27,21 @@ module.exports = class TicketGenerator {
     * the information.
     */
    countItems() {
-      this.elementsCounted = {};
-   		for(let name of this.items) {
+        this.elementsCounted = {};
+   	    for(let name of this.items) {
     		this.elementsCounted[name] = this.elementsCounted[name] ? this.elementsCounted[name] + 1 : 1;
-      }
+        }
    }
 
    /**
-    * The method computes the price of each product in the 
+    * The method computes the price of each product in the
     * shopping basket.
     *
-    * this method pre-requisit is to have already lunched the 
+    * this method pre-requisit is to have already lunched the
     * countItems method.
+    *
+    * It is required to run countItems before running
+    * caculatePrice otherwise, you wont have a solution.
     */
    calculatePrice() {
    		for (let key in this.elementsCounted) {
@@ -46,7 +49,7 @@ module.exports = class TicketGenerator {
    			const elementConfig = this.config[key];
    			var price = 0;
    			if (elementConfig === undefined) {
-   				throw 'Element : ' + key + ', non existent in the store.';
+   				throw new Error('Element : ' + key + ', non existent in the store.');
    			} else if (elementConfig.solded === undefined) {
    				price = count * elementConfig.unitPrice;
    			} else {
@@ -59,17 +62,17 @@ module.exports = class TicketGenerator {
    		}
    }
 
-   /** 
+   /**
     * This method generate the ticket.
     * The generated ticket is stored in the ticket object
     */
    generateTicket() {
    		this.countItems();
-		  this.calculatePrice();
+		this.calculatePrice();
    }
 
    /**
-    * the method display the ticket in the console.
+    * the method displays the ticket in the console.
     */
    display() {
    		for (let key in this.ticket) {

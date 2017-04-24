@@ -2,16 +2,12 @@
 var items = [
 	 'Apple',
 	 'Apple',
+	 'Apple',
+	 'Apple',
+
 	 'Orange',
 	 'Orange',
-	 'Garlic',
-	 'Garlic',
-	 'Papaya',
-	 'Papaya',
-	 'Papaya',
-	 'Papaya',
-	 'Papaya',
-	 'Papaya'
+	 'Orange'
 ];
 
 module.exports = {
